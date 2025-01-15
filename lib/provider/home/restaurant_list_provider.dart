@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:restaurant_app/data/api/api_services.dart';
-
 import 'package:restaurant_app/static/restaurant_list_result_state.dart';
 
 class RestaurantListProvider extends ChangeNotifier {
@@ -18,6 +17,8 @@ class RestaurantListProvider extends ChangeNotifier {
     try {
       _resultState = RestaurantListLoadingState();
       notifyListeners();
+
+      await Future.delayed(const Duration(seconds: 2));
 
       final result = await _apiServices.getRestaurantList();
 

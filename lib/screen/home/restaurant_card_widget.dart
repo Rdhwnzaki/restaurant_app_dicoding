@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
+import 'package:restaurant_app/style/colors/restaurant_colors.dart';
+import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
+import 'package:lottie/lottie.dart';
 
 class RestaurantCardWidget extends StatelessWidget {
   final Restaurant restaurant;
@@ -32,19 +35,19 @@ class RestaurantCardWidget extends StatelessWidget {
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
+                      child: Lottie.asset(
+                        'assets/animations/loading.json',
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.contain,
                       ),
                     );
                   },
                   errorBuilder: (context, error, stackTrace) {
-                    return const Icon(
+                    return Icon(
                       Icons.broken_image,
                       size: 50,
-                      color: Colors.grey,
+                      color: RestaurantColors.primary.color,
                     );
                   },
                   width: 120,
@@ -60,29 +63,23 @@ class RestaurantCardWidget extends StatelessWidget {
                 children: [
                   Text(
                     restaurant.name,
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: RestaurantTextStyles.titleMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6.0),
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.location_on,
-                        color: Colors.redAccent,
-                        size: 16.0,
+                        color: RestaurantColors.locationIcon.color,
+                        size: 17.0,
                       ),
                       const SizedBox(width: 4.0),
                       Expanded(
                         child: Text(
                           restaurant.city,
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.grey,
-                          ),
+                          style: RestaurantTextStyles.titleSmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -92,18 +89,15 @@ class RestaurantCardWidget extends StatelessWidget {
                   const SizedBox(height: 6.0),
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.star,
-                        color: Colors.amber,
-                        size: 16.0,
+                        color: RestaurantColors.ratingIcon.color,
+                        size: 17.0,
                       ),
                       const SizedBox(width: 4.0),
                       Text(
                         restaurant.rating.toString(),
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.grey,
-                        ),
+                        style: RestaurantTextStyles.titleSmall,
                       ),
                     ],
                   ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
 import 'package:restaurant_app/screen/home/restaurant_card_widget.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:restaurant_app/static/restaurant_list_result_state.dart';
+import 'package:restaurant_app/style/colors/restaurant_colors.dart';
+import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,20 +32,21 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Icon(
               Icons.restaurant_menu,
-              color: Colors.white,
+              color: RestaurantColors.onPrimary.color,
             ),
             const SizedBox(width: 8),
-            const Text(
+            Text(
               "Restaurant",
-              style: TextStyle(color: Colors.white),
+              style: RestaurantTextStyles.headlineSmall.copyWith(
+                color: RestaurantColors.onPrimary.color,
+              ),
             ),
           ],
         ),
-        backgroundColor: Colors.green,
         actions: [
           IconButton(
             icon: Icon(Icons.search),
-            color: Colors.white,
+            color: RestaurantColors.onPrimary.color,
             onPressed: () {},
           ),
         ],
@@ -51,28 +55,32 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: Radius.circular(16),
           ),
         ),
+        backgroundColor: RestaurantColors.primary.color,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(30.0),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
               "Recommended restaurant for you!",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
+              style: RestaurantTextStyles.titleMedium.copyWith(
+                color: RestaurantColors.onPrimary.color,
               ),
             ),
           ),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 1.0),
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
         child: Consumer<RestaurantListProvider>(
           builder: (context, value, child) {
             return switch (value.resultState) {
-              RestaurantListLoadingState() => const Center(
-                  child: CircularProgressIndicator(),
+              RestaurantListLoadingState() => Center(
+                  child: Lottie.asset(
+                    'assets/animations/loading.json',
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               RestaurantListLoadedState(data: var restaurantList) =>
                 ListView.builder(
@@ -94,7 +102,9 @@ class _HomeScreenState extends State<HomeScreen> {
               RestaurantListErrorState(error: var message) => Center(
                   child: Text(
                     message,
-                    style: TextStyle(color: Colors.red),
+                    style: RestaurantTextStyles.titleLarge.copyWith(
+                      color: RestaurantColors.error.color,
+                    ),
                   ),
                 ),
               _ => const SizedBox(),
