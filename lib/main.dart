@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_services.dart';
 import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
+import 'package:restaurant_app/provider/review/restaurant_add_review_provider.dart';
 import 'package:restaurant_app/provider/search/restaurant_search_provider.dart';
 import 'package:restaurant_app/screen/detail/detail_screen.dart';
 import 'package:restaurant_app/screen/home/home_screen.dart';
@@ -29,6 +30,11 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (context) => RestaurantSearchProvider(
+            context.read<ApiServices>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => RestaurantAddReviewProvider(
             context.read<ApiServices>(),
           ),
         )
