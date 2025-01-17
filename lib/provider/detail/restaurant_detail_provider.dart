@@ -18,6 +18,8 @@ class RestaurantDetailProvider extends ChangeNotifier {
       _resultState = RestaurantDetailLoadingState();
       notifyListeners();
 
+      await Future.delayed(const Duration(seconds: 2));
+
       final result = await _apiServices.getRestaurantDetail(id);
 
       if (result.error) {
