@@ -19,29 +19,32 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                "https://restaurant-api.dicoding.dev/images/large/${restaurant.pictureId}",
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: Lottie.asset(
-                      'assets/animations/loading.json',
-                      width: 150,
-                      height: 150,
-                      fit: BoxFit.contain,
-                    ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return Icon(
-                    Icons.broken_image,
-                    size: 50,
-                    color: RestaurantColors.primary.color,
-                  );
-                },
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
+              child: Hero(
+                tag: restaurant.id,
+                child: Image.network(
+                  "https://restaurant-api.dicoding.dev/images/large/${restaurant.pictureId}",
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: Lottie.asset(
+                        'assets/animations/loading.json',
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.contain,
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.broken_image,
+                      size: 50,
+                      color: RestaurantColors.primary.color,
+                    );
+                  },
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             const SizedBox(height: 16),

@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_app/style/colors/restaurant_colors.dart';
 import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
 
-class ErrorStateWidget extends StatelessWidget {
+class DetailErrorStateWidget extends StatelessWidget {
   final String errorMessage;
-  final VoidCallback onRetry;
 
-  const ErrorStateWidget({
-    super.key,
-    required this.errorMessage,
-    required this.onRetry,
-  });
+  const DetailErrorStateWidget({super.key, required this.errorMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +14,13 @@ class ErrorStateWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.wifi_off,
+            Icons.error,
             size: 80,
             color: RestaurantColors.error.color,
           ),
           const SizedBox(height: 16),
           Text(
-            "Failed to load data",
+            "Error",
             style: RestaurantTextStyles.titleLarge.copyWith(
               color: RestaurantColors.error.color,
             ),
@@ -35,13 +30,13 @@ class ErrorStateWidget extends StatelessWidget {
             errorMessage,
             textAlign: TextAlign.center,
             style: RestaurantTextStyles.bodyMedium.copyWith(
-              color: RestaurantColors.onAlert.color,
+              color: Colors.grey,
             ),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: onRetry,
-            child: const Text("Retry"),
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Go Back"),
           ),
         ],
       ),

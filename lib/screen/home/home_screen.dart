@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
-import 'package:restaurant_app/screen/error_state_widget.dart';
+import 'package:restaurant_app/screen/home/home_error_state_widget.dart';
 import 'package:restaurant_app/screen/home/home_appbar_widget.dart';
 import 'package:restaurant_app/screen/home/restaurant_list_widget.dart';
 import 'package:restaurant_app/screen/loading_state_widget.dart';
@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onRetry: _fetchRestaurantList,
                 );
               case RestaurantListErrorState(error: var message):
-                return ErrorStateWidget(
+                return HomeErrorStateWidget(
                   errorMessage: message,
                   onRetry: _fetchRestaurantList,
                 );

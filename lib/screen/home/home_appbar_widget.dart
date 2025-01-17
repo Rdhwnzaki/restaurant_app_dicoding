@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:restaurant_app/style/colors/restaurant_colors.dart';
 import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
 
@@ -27,7 +28,9 @@ class HomeAppbarWidget extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: const Icon(Icons.search),
           color: RestaurantColors.onPrimary.color,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, NavigationRoute.searchRoute.name);
+          },
         ),
       ],
       shape: const RoundedRectangleBorder(

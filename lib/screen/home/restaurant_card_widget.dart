@@ -28,31 +28,34 @@ class RestaurantCardWidget extends StatelessWidget {
                 maxHeight: 80,
                 maxWidth: 120,
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
-                child: Image.network(
-                  "https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}",
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: Lottie.asset(
-                        'assets/animations/loading.json',
-                        width: 150,
-                        height: 150,
-                        fit: BoxFit.contain,
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(
-                      Icons.broken_image,
-                      size: 50,
-                      color: RestaurantColors.primary.color,
-                    );
-                  },
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.cover,
+              child: Hero(
+                tag: restaurant.id,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0),
+                  child: Image.network(
+                    "https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}",
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: Lottie.asset(
+                          'assets/animations/loading.json',
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.contain,
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        Icons.broken_image,
+                        size: 50,
+                        color: RestaurantColors.primary.color,
+                      );
+                    },
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
