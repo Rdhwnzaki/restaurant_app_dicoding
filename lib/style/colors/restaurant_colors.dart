@@ -10,7 +10,8 @@ enum RestaurantColors {
   onSecondary("OnSecondary", Colors.black),
   onError("OnError", Colors.white),
   locationIcon("LocationIcon", Colors.red),
-  ratingIcon("RatingIcon", Colors.yellow);
+  ratingIcon("RatingIcon", Colors.yellow),
+  onAlert("OnAlert", Colors.grey);
 
   const RestaurantColors(this.name, this.color);
 

@@ -90,6 +90,8 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                 child: Text(
                   restaurant.description,
                   style: RestaurantTextStyles.bodyMedium,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
