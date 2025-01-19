@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/search/restaurant_search_provider.dart';
 import 'package:restaurant_app/screen/loading_state_widget.dart';
+import 'package:restaurant_app/screen/search/search_error_state_widget.dart';
 import 'package:restaurant_app/static/restaurant_search_result_state.dart';
 import 'package:restaurant_app/screen/home/restaurant_card_widget.dart';
-import 'package:restaurant_app/style/colors/restaurant_colors.dart';
-import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
 
 class SearchResultWidget extends StatelessWidget {
   const SearchResultWidget({super.key});
@@ -24,10 +23,8 @@ class SearchResultWidget extends StatelessWidget {
           return const Center(child: LoadingStateWidget());
         } else if (state is RestaurantSearchErrorState) {
           return Center(
-            child: Text(
-              state.error,
-              style: RestaurantTextStyles.titleSmall
-                  .copyWith(color: RestaurantColors.error.color),
+            child: SearchErrorStateWidget(
+              errorMessage: state.error,
             ),
           );
         } else if (state is RestaurantSearchLoadedState) {

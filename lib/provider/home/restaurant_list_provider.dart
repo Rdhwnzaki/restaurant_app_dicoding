@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:restaurant_app/data/api/api_services.dart';
 import 'package:restaurant_app/static/restaurant_list_result_state.dart';
@@ -18,19 +20,32 @@ class RestaurantListProvider extends ChangeNotifier {
       _resultState = RestaurantListLoadingState();
       notifyListeners();
 
-      await Future.delayed(const Duration(seconds: 2));
-
       final result = await _apiServices.getRestaurantList();
 
       if (result.error) {
-        _resultState = RestaurantListErrorState(result.message);
-        notifyListeners();
+        _resultState = RestaurantListErrorState(
+          "Failed to load restaurant data. Please try again.",
+        );
       } else {
         _resultState = RestaurantListLoadedState(result.restaurants);
-        notifyListeners();
       }
-    } on Exception catch (e) {
-      _resultState = RestaurantListErrorState(e.toString());
+    } on SocketException {
+      _resultState = RestaurantListErrorState(
+        "Your internet connection is problematic. Make sure you are connected to the network.",
+      );
+    } on HttpException {
+      _resultState = RestaurantListErrorState(
+        "Unable to connect to server. Please try again later.",
+      );
+    } on FormatException {
+      _resultState = RestaurantListErrorState(
+        "The data received from the server is invalid.",
+      );
+    } catch (e) {
+      _resultState = RestaurantListErrorState(
+        "An unknown error has occurred. Please try again.",
+      );
+    } finally {
       notifyListeners();
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:restaurant_app/data/api/api_services.dart';
 import 'package:restaurant_app/static/restaurant_review_result_state.dart';
@@ -31,14 +33,29 @@ class RestaurantAddReviewProvider extends ChangeNotifier {
       );
 
       if (result.error) {
-        _resultState = RestaurantReviewErrorState(result.message);
-        notifyListeners();
+        _resultState = RestaurantReviewErrorState(
+          "Failed to add review. Please try again.",
+        );
       } else {
         _resultState = RestaurantReviewLoadedState(result.customerReviews);
-        notifyListeners();
       }
-    } on Exception catch (e) {
-      _resultState = RestaurantReviewErrorState(e.toString());
+    } on SocketException {
+      _resultState = RestaurantReviewErrorState(
+        "Your internet connection is problematic. Make sure you are connected to the network.",
+      );
+    } on HttpException {
+      _resultState = RestaurantReviewErrorState(
+        "Unable to connect to server. Please try again later.",
+      );
+    } on FormatException {
+      _resultState = RestaurantReviewErrorState(
+        "The data received from the server is invalid.",
+      );
+    } catch (e) {
+      _resultState = RestaurantReviewErrorState(
+        "An unknown error has occurred. Please try again.",
+      );
+    } finally {
       notifyListeners();
     }
   }

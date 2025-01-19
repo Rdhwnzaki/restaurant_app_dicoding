@@ -42,9 +42,16 @@ class _DetailScreenState extends State<DetailScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: AddReviewSectionWidget(restaurantId: widget.restaurantId),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 16,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+              ),
+              child: AddReviewSectionWidget(restaurantId: widget.restaurantId),
+            ),
           ),
         );
       },

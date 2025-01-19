@@ -19,7 +19,7 @@ class HomeErrorStateWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.wifi_off,
+            Icons.error_outline_outlined,
             size: 80,
             color: RestaurantColors.error.color,
           ),
