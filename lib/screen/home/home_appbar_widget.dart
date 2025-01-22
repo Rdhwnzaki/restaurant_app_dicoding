@@ -44,7 +44,7 @@ class HomeAppbarWidget extends StatelessWidget implements PreferredSizeWidget {
           child: Text(
             "Recommended restaurant for you!",
             style: RestaurantTextStyles.titleMedium.copyWith(
-              color: RestaurantColors.onPrimary.color,
+              color: RestaurantColors.secondary.color,
             ),
           ),
         ),

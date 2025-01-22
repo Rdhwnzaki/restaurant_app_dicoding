@@ -8,6 +8,7 @@ import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
 import 'package:restaurant_app/provider/main/index_nav_provider.dart';
 import 'package:restaurant_app/provider/review/restaurant_add_review_provider.dart';
 import 'package:restaurant_app/provider/search/restaurant_search_provider.dart';
+import 'package:restaurant_app/provider/setting/theme_provider.dart';
 import 'package:restaurant_app/screen/detail/detail_screen.dart';
 import 'package:restaurant_app/screen/main/main_screen.dart';
 import 'package:restaurant_app/screen/search/search_screen.dart';
@@ -51,6 +52,9 @@ void main() {
           create: (context) => LocalDatabaseProvider(
             context.read<LocalDatabaseService>(),
           ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ThemeProvider(),
         )
       ],
       child: const MyApp(),
@@ -63,11 +67,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       title: "Restaurant App",
       theme: RestaurantTheme.lightTheme,
       darkTheme: RestaurantTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: themeProvider.isDarkTheme ? ThemeMode.dark : ThemeMode.light,
       initialRoute: NavigationRoute.mainRoute.name,
       routes: {
         NavigationRoute.mainRoute.name: (context) => const MainScreen(),

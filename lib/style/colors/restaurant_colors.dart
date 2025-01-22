@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum RestaurantColors {
   primary("Primary", Color(0xFF008000)),
-  secondary("Secondary", Color(0xFF03DAC6)),
+  secondary("Secondary", Color.fromARGB(255, 197, 218, 3)),
   background("Background", Color(0xFFF6F6F6)),
   surface("Surface", Colors.white),
   error("Error", Color(0xFFB00020)),

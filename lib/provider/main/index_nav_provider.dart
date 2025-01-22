@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class IndexNavProvider extends ChangeNotifier {
-  int _indexBottomNavBar = 0;
+  int _indexBottomNavBar = 1;
 
   int get indexBottomNavBar => _indexBottomNavBar;
 

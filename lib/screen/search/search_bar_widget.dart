@@ -25,7 +25,6 @@ class SearchBarWidget extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'Search restaurants...',
             filled: true,
-            fillColor: RestaurantColors.surface.color,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 14.0,
