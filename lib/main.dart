@@ -2,20 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_services.dart';
 import 'package:restaurant_app/data/local/local_database_service.dart';
+import 'package:restaurant_app/data/local/local_notification_service.dart';
 import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
 import 'package:restaurant_app/provider/favorite/local_database_provider.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
 import 'package:restaurant_app/provider/main/index_nav_provider.dart';
 import 'package:restaurant_app/provider/review/restaurant_add_review_provider.dart';
 import 'package:restaurant_app/provider/search/restaurant_search_provider.dart';
+import 'package:restaurant_app/provider/setting/local_notification_provider.dart';
 import 'package:restaurant_app/provider/setting/theme_provider.dart';
 import 'package:restaurant_app/screen/detail/detail_screen.dart';
 import 'package:restaurant_app/screen/main/main_screen.dart';
 import 'package:restaurant_app/screen/search/search_screen.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:restaurant_app/style/theme/restaurant_theme.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
-void main() {
+void main() async {
+  tz.initializeTimeZones();
+  WidgetsFlutterBinding.ensureInitialized();
+  final localNotificationService = LocalNotificationService();
+  final notificationProvider =
+      LocalNotificationProvider(localNotificationService);
+  await notificationProvider.initialize();
   runApp(
     MultiProvider(
       providers: [
@@ -55,7 +64,16 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
-        )
+        ),
+        Provider(create: (context) => LocalNotificationService()),
+        ChangeNotifierProvider(
+          create: (context) => LocalNotificationProvider(
+            context.read<LocalNotificationService>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => notificationProvider,
+        ),
       ],
       child: const MyApp(),
     ),

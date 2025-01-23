@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:restaurant_app/provider/detail/favorite_icon_provider.dart';
 import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
 import 'package:restaurant_app/screen/detail/favorite_icon_widget.dart';
+import 'package:restaurant_app/screen/detail/restaurant_description_widget.dart';
 import 'package:restaurant_app/static/restaurant_detail_result_state.dart';
 import 'package:restaurant_app/style/colors/restaurant_colors.dart';
 import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
@@ -111,11 +112,8 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  restaurant.description,
-                  style: RestaurantTextStyles.bodyMedium,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
+                child: RestaurantDescriptionWidget(
+                  description: restaurant.description,
                 ),
               ),
             ),

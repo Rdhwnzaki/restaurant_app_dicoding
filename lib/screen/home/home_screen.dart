@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
+import 'package:restaurant_app/provider/setting/local_notification_provider.dart';
 import 'package:restaurant_app/screen/home/home_error_state_widget.dart';
 import 'package:restaurant_app/screen/home/home_appbar_widget.dart';
 import 'package:restaurant_app/screen/home/restaurant_list_widget.dart';
@@ -19,12 +20,83 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchRestaurantList();
+    _scheduleDailyElevenAMNotification();
+    context.read<LocalNotificationProvider>().initialize();
   }
 
   void _fetchRestaurantList() {
     Future.microtask(() {
       context.read<RestaurantListProvider>().fetchRestaurantList();
     });
+  }
+
+  Future<void> _scheduleDailyElevenAMNotification() async {
+    context
+        .read<LocalNotificationProvider>()
+        .scheduleDailyElevenAMNotification();
+  }
+
+  Future<void> _checkPendingNotificationRequests() async {
+    final localNotificationProvider = context.read<LocalNotificationProvider>();
+    await localNotificationProvider.checkPendingNotificationRequests();
+
+    if (!mounted) {
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final pendingData = context
+            .watch<LocalNotificationProvider>()
+            .pendingNotificationRequests;
+        return AlertDialog(
+          title: Text(
+            '${pendingData.length} pending notification requests',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          content: SizedBox(
+            height: 300,
+            width: 300,
+            child: ListView.builder(
+              itemCount: pendingData.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final item = pendingData[index];
+                return ListTile(
+                  title: Text(
+                    item.title ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    item.body ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  contentPadding: EdgeInsets.zero,
+                  trailing: IconButton(
+                    onPressed: () {
+                      localNotificationProvider.cancelNotification(item.id);
+                    },
+                    icon: const Icon(Icons.delete_outline),
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
