@@ -57,9 +57,11 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  restaurant.name,
-                  style: RestaurantTextStyles.headlineLarge,
+                Flexible(
+                  child: Text(
+                    restaurant.name,
+                    style: RestaurantTextStyles.headlineLarge,
+                  ),
                 ),
                 ChangeNotifierProvider(
                   create: (context) => FavoriteIconProvider(),

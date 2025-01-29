@@ -7,6 +7,7 @@ import 'package:restaurant_app/static/restaurant_review_result_state.dart';
 import 'package:restaurant_app/screen/detail/custom_text_field.dart';
 import 'package:restaurant_app/style/colors/restaurant_colors.dart';
 import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
+import 'package:restaurant_app/provider/detail/add_section_provider.dart';
 
 class AddReviewSectionWidget extends StatefulWidget {
   final String restaurantId;
@@ -20,8 +21,6 @@ class AddReviewSectionWidget extends StatefulWidget {
 class _AddReviewSectionWidgetState extends State<AddReviewSectionWidget> {
   final _nameController = TextEditingController();
   final _reviewController = TextEditingController();
-  String? _successMessage;
-  bool _hasUpdatedDetail = false;
 
   @override
   void dispose() {
@@ -41,107 +40,110 @@ class _AddReviewSectionWidgetState extends State<AddReviewSectionWidget> {
       return;
     }
 
-    setState(() {
-      _successMessage = null;
-      _hasUpdatedDetail = false;
-    });
+    final reviewProvider = context.read<RestaurantAddReviewProvider>();
+    final sectionProvider = context.read<AddReviewSectionProvider>();
 
-    context.read<RestaurantAddReviewProvider>().createRestaurantReview(
-          widget.restaurantId,
-          name,
-          review,
-        );
+    sectionProvider.resetState();
+    reviewProvider.createRestaurantReview(widget.restaurantId, name, review);
   }
 
   void _onSuccess(BuildContext context) {
-    if (!_hasUpdatedDetail) {
-      setState(() {
-        _successMessage = "Review successfully added!";
-      });
+    final sectionProvider = context.read<AddReviewSectionProvider>();
+    if (!sectionProvider.hasUpdatedDetail) {
+      sectionProvider.setSuccessMessage("Review successfully added!");
       _nameController.clear();
       _reviewController.clear();
 
       context
           .read<RestaurantDetailProvider>()
           .fetchRestaurantDetail(widget.restaurantId);
-
-      _hasUpdatedDetail = true;
+      sectionProvider.markDetailUpdated();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Add Review",
-                style: RestaurantTextStyles.titleMedium,
-              ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          if (_successMessage != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
-              child: Text(_successMessage!,
-                  style: RestaurantTextStyles.titleSmall
-                      .copyWith(color: RestaurantColors.primary.color)),
-            ),
-          CustomTextField(
-            controller: _nameController,
-            labelText: "Your Name",
-          ),
-          const SizedBox(height: 12),
-          CustomTextField(
-            controller: _reviewController,
-            labelText: "Your Review",
-            maxLines: 3,
-          ),
-          const SizedBox(height: 16),
-          Consumer<RestaurantAddReviewProvider>(
-            builder: (context, provider, child) {
-              if (provider.resultState is RestaurantReviewLoadingState) {
-                return const Center(
-                  child: LoadingStateWidget(),
-                );
-              }
-
-              if (provider.resultState is RestaurantReviewErrorState) {
-                final error =
-                    (provider.resultState as RestaurantReviewErrorState).error;
-                return Text(
-                  error,
-                  style: RestaurantTextStyles.titleSmall
-                      .copyWith(color: RestaurantColors.error.color),
-                );
-              }
-
-              if (provider.resultState is RestaurantReviewLoadedState &&
-                  !_hasUpdatedDetail) {
-                Future.microtask(() => _onSuccess(context));
-              }
-
-              return ElevatedButton(
-                onPressed: () => _submitReview(context),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+    return ChangeNotifierProvider(
+      create: (_) => AddReviewSectionProvider(),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Consumer<AddReviewSectionProvider>(
+          builder: (context, sectionProvider, child) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Add Review",
+                      style: RestaurantTextStyles.titleMedium,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
                 ),
-                child: const Text("Submit Review"),
-              );
-            },
-          ),
-        ],
+                const SizedBox(height: 12),
+                if (sectionProvider.successMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
+                    child: Text(
+                      sectionProvider.successMessage!,
+                      style: RestaurantTextStyles.titleSmall
+                          .copyWith(color: RestaurantColors.primary.color),
+                    ),
+                  ),
+                CustomTextField(
+                  controller: _nameController,
+                  labelText: "Your Name",
+                ),
+                const SizedBox(height: 12),
+                CustomTextField(
+                  controller: _reviewController,
+                  labelText: "Your Review",
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 16),
+                Consumer<RestaurantAddReviewProvider>(
+                  builder: (context, provider, child) {
+                    if (provider.resultState is RestaurantReviewLoadingState) {
+                      return const Center(
+                        child: LoadingStateWidget(),
+                      );
+                    }
+
+                    if (provider.resultState is RestaurantReviewErrorState) {
+                      final error =
+                          (provider.resultState as RestaurantReviewErrorState)
+                              .error;
+                      return Text(
+                        error,
+                        style: RestaurantTextStyles.titleSmall
+                            .copyWith(color: RestaurantColors.error.color),
+                      );
+                    }
+
+                    if (provider.resultState is RestaurantReviewLoadedState &&
+                        !sectionProvider.hasUpdatedDetail) {
+                      Future.microtask(() => _onSuccess(context));
+                    }
+
+                    return ElevatedButton(
+                      onPressed: () => _submitReview(context),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      child: const Text("Submit Review"),
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
